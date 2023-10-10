@@ -2,9 +2,19 @@
 
 Aluno: Lucas Gianordoli
 
-Para executar o projeto clone o projeto para pasta destino;
-Após isso precisa compilar o arquivo AppRelatorioArvore.java com o comando:
-[avac -Xlint:unchecked app/AppRelatorioArvoreBinaria.java]
+# Guia de Configuração e Execução
 
-Com o executavel basta rodar o camando:
-[java  app.AppRelatorioArvoreBinaria]
+Este guia descreve os passos necessários para clonar, compilar e executar o projeto [trabArvoreBinariaExemplo](https://github.com/gianordolilucas/trabArvoreBinariaExemplo).
+
+```bash
+# Clonando o Repositório
+git clone https://github.com/gianordolilucas/trabArvoreBinariaExemplo.git
+
+# Navegando até a Pasta src
+cd trabArvoreBinariaExemplo/src
+
+# Compilando o Projeto
+javac -Xlint:unchecked app/AppRelatorioArvoreBinaria.java
+
+# Executando o Projeto
+java app.AppRelatorioArvoreBinaria
