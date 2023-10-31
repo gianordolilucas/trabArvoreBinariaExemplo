@@ -22,7 +22,7 @@ public class ArvoreBinaria<T> implements IArvoreBinaria<T> {
             raiz = new No<T>(novoValor);
         }
     
-        adicionar(raiz, novoValor);
+        adicionar(raiz, novoValor, true);
     }
     
     private No<T> adicionar( No<T> no, T novoValor) {
@@ -41,6 +41,28 @@ public class ArvoreBinaria<T> implements IArvoreBinaria<T> {
 
         return no;
     }
+
+    //Método adicionar sem recursividade para não dar erro de stack na primeira parte da questão 09 do questionário
+    private  void adicionar (No<T> no, T novoValor, boolean noRec) {
+        No<T> novoNo = new No<>(novoValor);
+        No<T> noAtual = no;
+        while (true) {
+            int comparacao = comparador.compare(novoValor, noAtual.getValor());
+            if (comparacao < 0) {
+                if(noAtual.getNoEsquerda() == null) {
+                    noAtual.setNoDireita(novoNo);
+                    return;
+                }
+                noAtual = noAtual.getNoEsquerda();
+            } else {
+                if(noAtual.getNoDireita() == null) {
+                    noAtual.setNoDireita(novoNo);
+                    return;
+                }
+                noAtual = noAtual.getNoDireita();
+            }
+        }
+    }
     
 
     @Override
@@ -49,33 +71,31 @@ public class ArvoreBinaria<T> implements IArvoreBinaria<T> {
     }
 
     private T pesquisar(No<T> no, T valor) {
-        if (no == null) {
-            return null; // Valor não encontrado na árvore
+        int comparacao = comparador.compare(no.getValor(), valor);
+        while( no  !=null && comparacao == 0) {
+            if (comparacao < 0) {
+                no = no.getNoEsquerda();
+            } else {
+                no = no.getNoEsquerda();
+            }
         }
-    
-        int comparacao = comparador.compare(valor, no.getValor());
-
-    
-        if (comparacao == 0) {
-            return no.getValor(); // Valor encontrado
-        } else if (comparacao < 0) {
-            return pesquisar(no.getNoEsquerda(), valor); // Busca na subárvore esquerda
-        } else {
-            return pesquisar(no.getNoDireita(), valor); // Busca na subárvore direita
-        }
-    }
+        return no.getValor();
+    }  
     
 
     @Override
     public T remover(T valor) {
         raiz = remover(raiz, valor);
-        return valor;        
+        if (raiz == null) {
+            return null;
+        }        
+        return raiz.getValor();
     }
 
     private No<T> remover( No<T> no, T valor) {
         
         if (no == null) {
-            return no; // Caso base: o valor não foi encontrado
+            return null; // Caso base: o valor não foi encontrado
         }
 
         int comparacao = comparador.compare(valor, no.getValor());
@@ -112,7 +132,7 @@ public class ArvoreBinaria<T> implements IArvoreBinaria<T> {
 
     @Override
     public int altura() {
-        return altura(raiz);
+        return altura(raiz, true);
     }
 
     private int altura(No<T> no) {
@@ -125,6 +145,38 @@ public class ArvoreBinaria<T> implements IArvoreBinaria<T> {
     
         // A altura da árvore é o máximo entre as alturas da subárvore esquerda e direita, mais 1 para contar o nó da raiz
         return Math.max(alturaEsquerda, alturaDireita) + 1;
+    }
+
+    private int altura(No<T> no, boolean noRec) {
+        if (no == null){
+            return 0; //Árvore vazia
+        }
+
+
+        int altura = 0;
+        Queue<No<T>> fila = new LinkedList<>();
+        fila.offer(no);
+
+        while(true) {
+            int tamanhoFila = fila.size();
+            if (tamanhoFila == 0) {
+                return altura;
+            }
+
+            altura++;
+
+            while(tamanhoFila > 0) {
+                No<T> noAtual = fila.poll();
+                if(noAtual.getNoEsquerda() != null) {
+                    fila.offer(noAtual.getNoEsquerda());
+                }
+                if(noAtual.getNoDireita() != null) {
+                    fila.offer(noAtual.getNoDireita());
+                }
+
+                tamanhoFila--;
+            }
+        }
     }
 
     @Override
